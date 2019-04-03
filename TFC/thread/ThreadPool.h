@@ -12,7 +12,6 @@
 #include <condition_variable>
 
 namespace TFC {
-namespace Thread {
 class ThreadPool {
 using Uint64 = uint64_t;
 using VVF = std::function<void()>;
@@ -37,7 +36,6 @@ public:
                 });
         }
         taskCV.notify_one();
-
         return future;
     }
 private:
@@ -47,7 +45,6 @@ private:
     std::condition_variable taskCV;
     std::atomic<bool> stopped;
 };
-} // Thread
 } // TFC
 
 #endif // THREADPOOL_H

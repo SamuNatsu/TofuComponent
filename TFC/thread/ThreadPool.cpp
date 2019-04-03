@@ -1,11 +1,9 @@
 #include "ThreadPool.h"
 
 namespace TFC {
-namespace Thread {
 ThreadPool::ThreadPool(Uint64 pSize) {
     idleThreadCount.store(pSize < 1 ? 1 : pSize);
     stopped.store(false);
-
     for (Uint64 i = 0; i < idleThreadCount.load(); ++i) {
         threadPool.emplace_back(
             [&]() {
@@ -33,7 +31,6 @@ ThreadPool::ThreadPool(Uint64 pSize) {
 
 ThreadPool::~ThreadPool() {
     stopped.store(true);
-
     taskCV.notify_all();
     for(auto& i : threadPool) {
         if (i.joinable()) {
@@ -41,5 +38,4 @@ ThreadPool::~ThreadPool() {
         }
     }
 }
-} // Thread
 } // TFC
