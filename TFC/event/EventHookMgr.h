@@ -22,9 +22,7 @@ public:
     Uint64 GetHookID(const char*);
     std::string GetError() const;
 private:
-	 // Hook map
     std::unordered_map<const char*, Uint64> hook;
-	 // Error string
     std::string error = "";
 };
 } // TFC

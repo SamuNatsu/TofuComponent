@@ -16,11 +16,8 @@ struct STF {
     VVF hookFunction;
 };
 namespace EventHookData {
- // Hook counter
 extern Uint64 hookCounter;
- // Hook map
 extern std::unordered_map<Uint64, STF> hook;
- // Error string
 extern std::string error;
 } // EventHookData
  // Add & Remove

@@ -15,18 +15,18 @@ bool Initialize() {
             SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        TFC::MsgBox::ErrorMsgBox("Oops", SDL_GetError());
+        TFC::MsgBox::Error("Oops", SDL_GetError());
         return false;
     }
 
     int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
     if (IMG_Init(flags) != flags) {
-        TFC::MsgBox::ErrorMsgBox("Oops", SDL_GetError());
+        TFC::MsgBox::Error("Oops", SDL_GetError());
         return false;
     }
 
     if(TTF_Init() < 0){
-        TFC::MsgBox::ErrorMsgBox("Oops", SDL_GetError());
+        TFC::MsgBox::Error("Oops", SDL_GetError());
         return false;
     }
 

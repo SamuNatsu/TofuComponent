@@ -5,6 +5,7 @@
 #include <memory>
 
 namespace TFC {
+namespace Thread {
 template<typename T>
 class LockFreeQueue {
     using Uint64 = uint64_t;
@@ -28,7 +29,8 @@ class LockFreeQueue {
             do {
                 newCounter = oldCounter;
                 --newCounter.interCounter;
-            } while(!counter.compare_exchange_strong(oldCounter, newCounter, std::memory_order_acquire, std::memory_order_relaxed));
+            }
+            while(!counter.compare_exchange_strong(oldCounter, newCounter, std::memory_order_acquire, std::memory_order_relaxed));
             if(!newCounter.interCounter && !newCounter.outerCounter) {
                 delete this;
             }
@@ -39,7 +41,7 @@ class LockFreeQueue {
         Uint64 externCounter;
     };
 public:
-     // Construction & Destruction
+     // Construction &Destruction
     LockFreeQueue() {
         CounterNode newNode;
         newNode.next = new Node();
@@ -103,7 +105,8 @@ private:
         do {
             newNode = node;
             ++newNode.externCounter;
-        } while(!headNode.compare_exchange_strong(node, newNode, std::memory_order_acquire, std::memory_order_relaxed));
+        }
+        while(!headNode.compare_exchange_strong(node, newNode, std::memory_order_acquire, std::memory_order_relaxed));
         node = newNode;
     }
     void FreeOutCount(CounterNode& node) {
@@ -115,12 +118,14 @@ private:
             newCounter = counter;
             newCounter.interCounter += cout_realease;
             --newCounter.outerCounter;
-        } while(!pNode->counter.compare_exchange_strong(counter, newCounter, std::memory_order_acquire, std::memory_order_relaxed));
+        }
+        while(!pNode->counter.compare_exchange_strong(counter, newCounter, std::memory_order_acquire, std::memory_order_relaxed));
         if (!newCounter.interCounter && !newCounter.outerCounter) {
             delete pNode;
         }
     }
 };
+} // Thread
 } // TFC
 
 #endif // LOCKFREEQUEUE_H_INCLUDED

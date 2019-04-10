@@ -1,22 +1,21 @@
 #ifndef MSGBOX_H
 #define MSGBOX_H
 
-#include "../TFC_header.h"
-
 #include <string>
+
+#include "../TFC_header.h"
 
 namespace TFC {
 namespace MsgBox {
 namespace MsgBoxData {
+//Error string
 extern std::string error;
-} // MsgBoxData
- //Preset Message Box
-bool InfoMsgBox(const char*, const char*, SDL_Window* = nullptr);
-bool WarnMsgBox(const char*, const char*, SDL_Window* = nullptr);
-bool ErrorMsgBox(const char*, const char*, SDL_Window* = nullptr);
- //Custom Message Box
- /*Comming soon*/
-} //MsgBox
-} // TFC
+}
+//Preset Message Box
+bool Information(const char*, const char*, SDL_Window* = nullptr); //Show information message box
+bool Warning(const char*, const char*, SDL_Window* = nullptr); //Show warning message box
+bool Error(const char*, const char*, SDL_Window* = nullptr); //Show error message box
+}
+}
 
 #endif // MSGBOX_H

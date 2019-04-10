@@ -29,17 +29,14 @@ public:
      // Get
     std::string GetError() const;
 private:
-     // Default button structure
-    struct btn {
+    struct btn{
         bool enabled, pressed;
         int x1, y1, x2, y2;
         TFC::EventHookMgr hookMgr;
     };
-     // Button map
     std::unordered_map<std::string, btn> buttons;
-     // Error string
-    std::string error = "";
-     // Judge
+    std::string error="";
+
     bool IsInRangeHover(btn&) const;
     bool IsInRangePress(btn&) const;
 };

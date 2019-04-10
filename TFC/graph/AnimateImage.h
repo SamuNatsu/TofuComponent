@@ -13,9 +13,11 @@ public:
     AnimateImage();
     ~AnimateImage();
      // Set
-    void SetFPS();
-    void SetFrameSize();
+    void SetFPS(int);
+    void SetFrameSize(int, int);
 private:
+    int sfps;
+    Uint64 fpsc, lastc;
     SDL_Rect frameInfo;
 };
 } // TFC
