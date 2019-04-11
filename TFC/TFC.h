@@ -1,3 +1,10 @@
+/*************************************************
+ *Copyright (c) 2019-2019 SamuNatsu <samunatsu.cn>
+ *File name : TFC.h
+ *Description : The main header of TFC
+ *Version : 1.0
+ ************************************************/
+
 #ifndef TFC_H_INCLUDED
 #define TFC_H_INCLUDED
 
