@@ -19,7 +19,7 @@ namespace TFC {
 class Button {
  //Internal using type
  using VVF = std::function<void()>;
- using BTN = struct btn{
+ using BTN = struct {
               bool enabled, pressed;
               int x1, y1, x2, y2;
               TFC::EventHookMgr hookMgr;
