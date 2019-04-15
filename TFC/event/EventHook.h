@@ -1,34 +1,44 @@
+/*************************************************
+ *Copyright (c) 2019-2019 SamuNatsu <samunatsu.cn>
+ *File name : EventHook.h
+ *Description : Some functions about hooking
+ *Version : 1.0
+ ************************************************/
+
 #ifndef EVENTHOOK_H
 #define EVENTHOOK_H
 
 #include "../graph/Display.h"
 #include "../TFC_header.h"
 
-#include <string>
-#include <functional>
-#include <unordered_map>
-
 namespace TFC {
 namespace EventHook {
+//Internal using type
 using VVF = std::function<void()>;
-struct STF {
-    SDL_EventType type;
-    VVF hookFunction;
-};
+using STF = struct {
+             SDL_EventType type;
+             VVF hookFunction;
+            };
+//Internal using data
 namespace EventHookData {
-extern Uint64 hookCounter;
-extern std::unordered_map<Uint64, STF> hook;
+//The non-decline counter of the hook
+extern uint64_t hookCounter;
+//Hooks
+extern std::unordered_map<uint64_t, STF> hook;
+//Error string
 extern std::string error;
-} // EventHookData
- // Add & Remove
-Uint64 AddHook(SDL_EventType, VVF);
-bool IsHookExists(Uint64);
-void RemoveHook(Uint64);
- // Call
-void CallAllHook(SDL_EventType);
+}
+//Add
+uint64_t AddHook(const SDL_EventType, const VVF);
+//Remove
+void RemoveHook(const uint64_t);
+//Call
+void CallAllHook(const SDL_EventType);
 void CallAllHook();
-bool CallHook(Uint64);
-} // EventHook
-} // TFC
+bool CallHook(const uint64_t);
+//Get attribute
+bool IsHookExists(const uint64_t);
+}
+}
 
 #endif // EVENTHOOK_H

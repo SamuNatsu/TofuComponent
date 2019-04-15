@@ -1,38 +1,46 @@
+/*************************************************
+ *Copyright (c) 2019-2019 SamuNatsu <samunatsu.cn>
+ *File name : FiniteStateMachine.h
+ *Description : A finite state machine structure
+ *Version : 1.0
+ ************************************************/
+
 #ifndef FINITESTATEMACHINE_H
 #define FINITESTATEMACHINE_H
 
-#include "../../graph/Display.h"
-#include "../../TFC_header.h"
 #include "BaseState.h"
-
-#include <string>
-#include <unordered_map>
+#include "../../TFC_header.h"
 
 namespace TFC {
-namespace FSM {
+
 class BaseState;
+
 class FiniteStateMachine {
-public:
-     // Construction & Destruction
-    FiniteStateMachine();
-    ~FiniteStateMachine();
-     // Register & Delete
-    bool RegisterState(const char*, BaseState&);
-    bool IsStateExists(const char*);
-    void DeleteState(const char*);
-     // Control
-    bool Reset(const char*);
-    void Update();
-    void Input(Uint64);
-    bool Transition(const char*);
-     // Get
-    std::string GetError() const;
-private:
-    std::unordered_map<const char*, BaseState*>::iterator nowState;
-    std::unordered_map<const char*, BaseState*> stateMap;
-    std::string error = "";
+ public:
+  //Constructor & Destructor
+  FiniteStateMachine();
+  ~FiniteStateMachine();
+  //Register
+  bool RegisterState(const char*, BaseState&);
+  //Delete
+  void DeleteState(const char*);
+  //Control
+  bool Reset(const char*);
+  void Update();
+  void Input(const uint64_t);
+  bool Transition(const char*);
+  //Get attribute
+  std::string GetError() const;
+  bool IsStateExists(const char*);
+ private:
+  //FSM state now
+  std::unordered_map<const char*, BaseState*>::iterator nowState_;
+  //States
+  std::unordered_map<const char*, BaseState*> stateMap_;
+  //Error string
+  std::string error_ = "";
 };
-} // FSM
-} // TFC
+
+}
 
 #endif // FINITESTATEMACHINE_H

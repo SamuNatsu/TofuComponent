@@ -8,14 +8,12 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "../event/FSM/BaseState.h"
-#include "../event/FSM/FiniteStateMachine.h"
 #include "../event/EventHookMgr.h"
 #include "../graph/Canvas.h"
-#include "../graph/Display.h"
 #include "../TFC_header.h"
 
 namespace TFC {
+
 class Button {
  //Internal using type
  using VVF = std::function<void()>;
@@ -28,22 +26,29 @@ class Button {
   //Constructor & Destructor
   Button();
   ~Button();
-  //Manage
-  bool RegisterButton(const char*, int, int, int, int, VVF, VVF, VVF, VVF);
-  bool DeleteButton(const char*);
+  //Register
+  bool RegisterButton(const char*, const int, const int, const int, const int, const VVF, const VVF, const VVF, const VVF);
+  //Delete
+  void DeleteButton(const char*);
+  //Enable & Disable
   bool EnableButton(const char*);
-  bool IsEnabled(const char*);
   bool DisableButton(const char*);
-  bool DrawDebugLayer();
-  //Get
+  //Get attribute
   std::string GetError() const;
+  bool IsButtonExists(const char*) const;
+  bool IsEnabled(const char*);
+  //Debug
+  bool DrawDebugLayer();
 private:
-  std::unordered_map<std::string, BTN> buttons;
-  std::string error = "";
+  //Buttons
+  std::unordered_map<std::string, BTN> buttons_;
+  //Error string
+  std::string error_ = "";
   //Internal using function
   bool IsInRangeHover(BTN&) const;
   bool IsInRangePress(BTN&) const;
 };
-} // TFC
+
+}
 
 #endif // BUTTON_H

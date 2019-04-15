@@ -29,7 +29,7 @@ class Image {
   bool Load(const char*); //Load
   //Release
   void Release(); //Release
-  //Get Attribute
+  //Get attribute
   bool IsLoaded() const; //Return whether it has been loaded
   uint8_t GetAlpha() const; //Return alpha
   std::string GetError() const; //Get error string

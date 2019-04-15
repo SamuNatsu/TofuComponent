@@ -1,64 +1,118 @@
 #include "FiniteStateMachine.h"
 
 namespace TFC {
-namespace FSM {
+
 FiniteStateMachine::FiniteStateMachine() {}
 
 FiniteStateMachine::~FiniteStateMachine() {}
 
-bool FiniteStateMachine::RegisterState(const char* name, BaseState& state) {
-    if (IsStateExists(name)) {
-        error = "Name exists";
-        return false;
-    }
-
-    stateMap[name] = &state;
-
-    return true;
+/*=================================================
+ *Function name : RegisterState
+ *Parameter :
+ *  const char *name : The custom name of the state
+ *  const BaseState& state : The state structure
+ *Description : Register a state
+ *Return : TRUE on success, FALSE on error
+ ================================================*/
+bool FiniteStateMachine::RegisterState(const char *name, BaseState &state) {
+  //If name used
+  if (IsStateExists(name)) {
+    error_ = "Name exists";
+    return false;
+  }
+  //Store the state
+  stateMap_[name] = &state;
+  //Return success
+  return true;
 }
 
-bool FiniteStateMachine::IsStateExists(const char* name) {
-    return stateMap.find(name) != stateMap.end();
+/*=================================================
+ *Function name : DeleteState
+ *Parameter :
+ *  const char *name : The custom name of the state
+ *Description : Delete a state
+ ================================================*/
+void FiniteStateMachine::DeleteState(const char *name) {
+  //Delete
+  stateMap_.erase(name);
 }
 
-void FiniteStateMachine::DeleteState(const char* name) {
-    stateMap.erase(name);
+/*=================================================
+ *Function name : Reset
+ *Parameter :
+ *  const char *name : The custom name of the state
+ *Description : Reset FSM
+ ================================================*/
+bool FiniteStateMachine::Reset(const char *name) {
+  //If not found
+  if (!IsStateExists(name)) {
+    error_ = "Invalid name";
+    return false;
+  }
+  //Set FSM state
+  nowState_ = stateMap_.find(name);
+  //Return success
+  return true;
 }
 
-bool FiniteStateMachine::Reset(const char* name) {
-    if (!IsStateExists(name)) {
-        error = "Invalid name";
-        return false;
-    }
-
-    nowState = stateMap.find(name);
-
-    return true;
-}
-
+/*=================================================
+ *Function name : Update
+ *Description : Update FSM
+ ================================================*/
 void FiniteStateMachine::Update() {
-    nowState->second->Update();
+  //Update
+  nowState_->second->Update();
 }
 
-void FiniteStateMachine::Input(Uint64 input) {
-    nowState->second->Input(*this, input);
+/*=================================================
+ *Function name : Input
+ *Description : Process input
+ ================================================*/
+void FiniteStateMachine::Input(const uint64_t input) {
+  //Process input
+  nowState_->second->Input(*this, input);
 }
 
-bool FiniteStateMachine::Transition(const char* name) {
-    if (!IsStateExists(name)) {
-        error = "Invalid name";
-        return false;
-    }
-
-    nowState->second->Exit();
-    nowState = stateMap.find(name);
-    nowState->second->Enter();
-
-    return true;
+/*=================================================
+ *Function name : Transition
+ *Parameter :
+ *  const char *name : The custom name of the state
+ *Description : State transition
+ *Return : TRUE on success, FALSE on error
+ ================================================*/
+bool FiniteStateMachine::Transition(const char *name) {
+  //If no found
+  if (!IsStateExists(name)) {
+    error_ = "Invalid name";
+    return false;
+  }
+  //Transition
+  nowState_->second->Exit();
+  nowState_ = stateMap_.find(name);
+  nowState_->second->Enter();
+  //Return success
+  return true;
 }
 
+/*=================================================
+ *Function name : GetError
+ *Description : Get error string
+ *Return : Error string
+ ================================================*/
 std::string FiniteStateMachine::GetError() const {
-    return error;
+  //Return query
+  return error_;
 }
-} // FSM
-} // TFC
+
+/*=================================================
+ *Function name : IsStateExists
+ *Parameter :
+ *  const char *name : The custom name of the state
+ *Description : Return whether the state is existed
+ *Return : TRUE on existed, FALSE on not existed
+ ================================================*/
+bool FiniteStateMachine::IsStateExists(const char *name) {
+  return stateMap_.find(name) != stateMap_.end();
+}
+
+}

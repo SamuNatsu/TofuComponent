@@ -5,24 +5,22 @@
 #include "../TFC_header.h"
 #include "Image.h"
 #include "Canvas.h"
-
-#include <mutex>
-#include <atomic>
-#include <string>
-#include <thread>
-#include <functional>
+#include "AnimateImage.h"
 
 namespace TFC {
 class Image;
 namespace Display {
 namespace DisplayData {
+namespace RenderData {
+extern std::atomic<uint64_t> startc, endc;
+}
 extern int sfps, rfps, stps, rtps;
 extern bool stopFlag;
 extern Uint64 fpsc, tpsc, cpuFreq;
 extern SDL_Event event;
 extern std::mutex eMutex, rMutex;
 extern std::string error;
-} // DisplayData
+}
  // Display method
 using VVF = std::function<void()>;
  // Control
@@ -31,14 +29,21 @@ void SetTPS(int);
 void FreshDisplay();
 void StartMainLoop(VVF, VVF);
 void StopMainLoop();
- // Image
+//AnimateImage
+bool DisplayAnimate(AnimateImage&, int, int, int, int, double, int, int, SDL_RendererFlip = SDL_FLIP_NONE);
+bool DisplayAnimate(AnimateImage&, int, int, int, int, double, SDL_RendererFlip = SDL_FLIP_NONE);
+bool DisplayAnimate(AnimateImage&, int, int, double, int, int, SDL_RendererFlip = SDL_FLIP_NONE);
+bool DisplayAnimate(AnimateImage&, int, int, double, SDL_RendererFlip = SDL_FLIP_NONE);
+bool DisplayAnimate(AnimateImage&, int, int, int, int);
+bool DisplayAnimate(AnimateImage&, int, int);
+// Image
 bool DisplayImage(Image&, int, int, int, int, double, int, int, SDL_RendererFlip = SDL_FLIP_NONE);
 bool DisplayImage(Image&, int, int, int, int, double, SDL_RendererFlip = SDL_FLIP_NONE);
 bool DisplayImage(Image&, int, int, double, int, int, SDL_RendererFlip = SDL_FLIP_NONE);
 bool DisplayImage(Image&, int, int, double, SDL_RendererFlip = SDL_FLIP_NONE);
 bool DisplayImage(Image&, int, int, int, int);
 bool DisplayImage(Image&, int, int);
-} // Display
-} // TFC
+}
+}
 
 #endif // DISPLAY_H

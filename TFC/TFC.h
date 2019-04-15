@@ -22,6 +22,7 @@
 #include "./network/TCP/TCPClient.h"
 */
 
+#include "./graph/AnimateImage.h"
 #include "./graph/Image.h"
 #include "./graph/Canvas.h"
 #include "./graph/MsgBox.h"

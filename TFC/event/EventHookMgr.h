@@ -1,30 +1,41 @@
+/*************************************************
+ *Copyright (c) 2019-2019 SamuNatsu <samunatsu.cn>
+ *File name : EventHookMgr.h
+ *Description : Manage a set of hooks
+ *Version : 1.0
+ ************************************************/
+
 #ifndef EVENTHOOKMGR_H
 #define EVENTHOOKMGR_H
 
 #include "EventHook.h"
-
-#include <string>
-#include <unordered_map>
+#include "../TFC_header.h"
 
 namespace TFC {
+
 class EventHookMgr {
+//Internal using type
 using VVF = std::function<void()>;
-public:
-     // Construction & Destruction
-    EventHookMgr();
-    ~EventHookMgr();
-     // Add & Remove
-    bool AddHook(const char*, SDL_EventType, VVF);
-    bool IsHookExists(const char*);
-    void RemoveAllHook();
-    bool RemoveHook(const char*);
-     // Get
-    Uint64 GetHookID(const char*);
-    std::string GetError() const;
-private:
-    std::unordered_map<const char*, Uint64> hook;
-    std::string error = "";
+ public:
+  //Construction & Destruction
+  EventHookMgr();
+  ~EventHookMgr();
+  //Add
+  bool AddHook(const char*, const SDL_EventType, const VVF);
+  //Remove
+  void RemoveAllHook();
+  bool RemoveHook(const char*);
+  //Get
+  std::string GetError() const;
+  uint64_t GetHookID(const char*);
+  bool IsHookExists(const char*);
+ private:
+  //Hooks
+  std::unordered_map<const char*, uint64_t> hook_;
+  //Error string
+  std::string error_ = "";
 };
-} // TFC
+
+}
 
 #endif // EVENTHOOKMGR_H
