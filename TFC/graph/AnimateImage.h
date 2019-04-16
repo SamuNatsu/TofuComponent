@@ -26,6 +26,8 @@ class AnimateImage : public Image {
   bool SetLoopRange(uint64_t, uint64_t);
   //Get
   uint64_t GetFrameNum() const;
+  int GetFrameWidth() const;
+  int GetFrameHeight() const;
  private:
   int sfps_ = 1;
   int frameW_ = 0, frameH_ = 0;

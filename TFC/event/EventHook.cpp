@@ -90,4 +90,9 @@ bool IsHookExists(const uint64_t index) {
 }
 
 }
+
+void TFC_HOOK_QUIT() {
+  TFC::Display::StopMainLoop();
+}
+
 } // TFC

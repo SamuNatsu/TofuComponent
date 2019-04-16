@@ -3,50 +3,59 @@
 namespace {
 
 void EventLoop(TFC::Display::VVF eventFunvtion) {
-  TFC::Display::DisplayData::event.type = 0;
+  static SDL_Event &event = TFC::Display::DisplayData::event;
+  static const uint64_t cpuFreq = SDL_GetPerformanceFrequency();
+
+  event.type = 0;
   uint64_t startc = SDL_GetPerformanceCounter(), endc = 0;
+
   while(!TFC::Display::DisplayData::stopFlag) {
-    if (SDL_PollEvent(&TFC::Display::DisplayData::event) > 0) {
+    while (SDL_PollEvent(&event) > 0) {
       TFC::EventHook::CallAllHook();
-      TFC::Display::DisplayData::event.type = 0;
+      eventFunvtion();
     }
-    eventFunvtion();
+    event.type = 0;
+
     endc = SDL_GetPerformanceCounter();
     if(startc + TFC::Display::DisplayData::tpsc >= endc) {
       TFC::Display::DisplayData::rtps = TFC::Display::DisplayData::stps;
       startc += TFC::Display::DisplayData::tpsc;
-      SDL_Delay(1000.0 * (startc - endc) / TFC::Display::DisplayData::cpuFreq);
+      SDL_Delay(1000.0 * (startc - endc) / cpuFreq);
       do {
         endc = SDL_GetPerformanceCounter();
       }
       while(startc >= endc);
     }
     else {
-      TFC::Display::DisplayData::rtps = static_cast<double>(TFC::Display::DisplayData::cpuFreq) / (endc - startc);
+      TFC::Display::DisplayData::rtps = static_cast<double>(cpuFreq) / (endc - startc);
     }
     startc = SDL_GetPerformanceCounter();
   }
 }
 
 void RenderLoop(TFC::Display::VVF renderFunction) {
+  static uint64_t &startc = TFC::Display::DisplayData::RenderData::startc;
+  static uint64_t &endc =TFC::Display::DisplayData::RenderData::endc;
+  static const uint64_t cpuFreq = SDL_GetPerformanceFrequency();
+
   while(!TFC::Display::DisplayData::stopFlag) {
-    std::unique_lock<std::mutex> lock(TFC::Display::DisplayData::rMutex);
+    //std::unique_lock<std::mutex> lock(TFC::Display::DisplayData::rMutex);
 
     SDL_RenderClear(TFC::Canvas::CanvasData::renderer);
     renderFunction();
 
-    TFC::Display::DisplayData::RenderData::endc.store(SDL_GetPerformanceCounter());
-    if(TFC::Display::DisplayData::RenderData::startc.load() + TFC::Display::DisplayData::fpsc >= endc) {
+    endc = SDL_GetPerformanceCounter();
+    if(startc + TFC::Display::DisplayData::fpsc >= endc) {
       TFC::Display::DisplayData::rfps = TFC::Display::DisplayData::sfps;
       startc += TFC::Display::DisplayData::fpsc;
-      SDL_Delay(1000.0 * (startc - endc) / TFC::Display::DisplayData::cpuFreq);
+      SDL_Delay(1000.0 * (startc - endc) / cpuFreq);
       do {
         endc = SDL_GetPerformanceCounter();
       }
       while(startc >= endc);
     }
     else {
-      TFC::Display::DisplayData::rfps = static_cast<double>(TFC::Display::DisplayData::cpuFreq) / (endc - startc);
+      TFC::Display::DisplayData::rfps = static_cast<double>(cpuFreq) / (endc - startc);
     }
     startc = SDL_GetPerformanceCounter();
   }
@@ -58,7 +67,7 @@ namespace TFC {
 namespace Display {
 namespace DisplayData {
 namespace RenderData {
-std::atomic<uint64_t> startc(0), endc(0);
+uint64_t startc = 0, endc = 0;
 }
 int sfps = 0, rfps = 0, stps = 0, rtps = 0;
 bool stopFlag = true;
@@ -68,25 +77,15 @@ std::mutex eMutex, rMutex;
 std::string error = "";
 } // DisplayData
 void SetFPS(int fps) {
-    DisplayData::sfps = fps;
-    DisplayData::rfps = 0;
-
-    if (DisplayData::cpuFreq == 0){
-        DisplayData::cpuFreq = SDL_GetPerformanceFrequency();
-    }
-
-    DisplayData::fpsc = 1.0 / fps * DisplayData::cpuFreq;
+  DisplayData::sfps = fps;
+  DisplayData::rfps = 0;
+  DisplayData::fpsc = 1.0 / fps * SDL_GetPerformanceFrequency();
 }
 
 void SetTPS(int tps) {
-    DisplayData::stps = tps;
-    DisplayData::rtps = 0;
-
-    if (DisplayData::cpuFreq == 0){
-        DisplayData::cpuFreq = SDL_GetPerformanceFrequency();
-    }
-
-    DisplayData::tpsc = 1.0 / tps * DisplayData::cpuFreq;
+  DisplayData::stps = tps;
+  DisplayData::rtps = 0;
+  DisplayData::tpsc = 1.0 / tps * SDL_GetPerformanceFrequency();
 }
 
 void FreshDisplay() {
@@ -94,9 +93,9 @@ void FreshDisplay() {
 }
 
 void StartMainLoop(VVF _EF,VVF _RF) {
-    DisplayData::stopFlag = false;
+  DisplayData::stopFlag = false;
 
-    std::thread rTrd(::RenderLoop);
+  std::thread rTrd(::RenderLoop, _RF);
 
   ::EventLoop(_EF);
 
@@ -147,6 +146,7 @@ bool DisplayImage(Image& img, int x, int y) {
 }
 
 bool DisplayAnimate(AnimateImage& img, int x, int y, int w, int h, double angle, int cx, int cy, SDL_RendererFlip flip){
+  img.NextFrame(TFC::Display::DisplayData::RenderData::startc);
     SDL_Rect rs = img.GetRenderAttribute(), r = {x, y, w, h};
     SDL_Point p = {cx, cy};
     if (SDL_RenderCopyEx(TFC::Canvas::CanvasData::renderer, img.GetTexture(), &rs, &r, angle, &p, flip) < 0) {
@@ -170,17 +170,20 @@ bool DisplayAnimate(AnimateImage& img, int x, int y, double angle, SDL_RendererF
 }
 
 bool DisplayAnimate(AnimateImage& img, int x, int y, int w,int h) {
-    SDL_Rect rs = img.GetRenderAttribute(), r = {x, y, w, h};
-    if (SDL_RenderCopy(TFC::Canvas::CanvasData::renderer, img.GetTexture(), &rs, &r) < 0) {
-        DisplayData::error = SDL_GetError();
-        return false;
-    }
+  img.NextFrame(TFC::Display::DisplayData::RenderData::startc);
 
-    return true;
+  SDL_Rect rs = img.GetRenderAttribute(), r = {x, y, w, h};
+
+  if (SDL_RenderCopy(TFC::Canvas::CanvasData::renderer, img.GetTexture(), &rs, &r) < 0) {
+    DisplayData::error = SDL_GetError();
+    return false;
+  }
+
+  return true;
 }
 
 bool DisplayAnimate(AnimateImage& img, int x, int y) {
-    return DisplayImage(img, x, y, img.GetWidth(), img.GetHeight());
+    return DisplayAnimate(img, x, y, img.GetFrameWidth(), img.GetFrameHeight());
 }
 
 }

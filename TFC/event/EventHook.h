@@ -39,6 +39,8 @@ bool CallHook(const uint64_t);
 //Get attribute
 bool IsHookExists(const uint64_t);
 }
+//Preset functions
+void TFC_HOOK_QUIT();
 }
 
 #endif // EVENTHOOK_H

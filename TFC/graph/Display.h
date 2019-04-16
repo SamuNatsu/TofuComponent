@@ -12,7 +12,7 @@ class Image;
 namespace Display {
 namespace DisplayData {
 namespace RenderData {
-extern std::atomic<uint64_t> startc, endc;
+extern uint64_t startc, endc;
 }
 extern int sfps, rfps, stps, rtps;
 extern bool stopFlag;
