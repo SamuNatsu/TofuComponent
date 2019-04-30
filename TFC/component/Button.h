@@ -1,16 +1,15 @@
 /*************************************************
  *Copyright (c) 2019-2019 SamuNatsu <samunatsu.cn>
  *File name : Button.h
- *Description : A button component
  *Version : 1.0
  ************************************************/
 
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef TFC_COMPONENT_BUTTON_H
+#define TFC_COMPONENT_BUTTON_H
+
+#include "../TFC_header.h"
 
 #include "../event/EventHookMgr.h"
-#include "../graph/Canvas.h"
-#include "../TFC_header.h"
 
 namespace TFC {
 
@@ -51,4 +50,4 @@ private:
 
 }
 
-#endif // BUTTON_H
+#endif // TFC_COMPONENT_BUTTON_H

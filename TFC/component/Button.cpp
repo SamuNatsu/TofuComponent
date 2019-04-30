@@ -1,12 +1,17 @@
 #include "Button.h"
 
+#include "../event/EventHook.h"
+#include "../graph/Canvas.h"
+
+#include "Director.h"
+
 namespace TFC {
 
 Button::Button() {}
 
 Button::~Button() {}
 
-/*======================================================
+/*============================================================
  *Function name : RegisterButton
  *Parameter :
  *  const char *name : The custom name of the button
@@ -20,7 +25,7 @@ Button::~Button() {}
  *  const Button::VVF leave : The action while mouse leave
  *Description : Register a button
  *Return : TRUE on success, FALSE on error
- =====================================================*/
+ ===========================================================*/
 bool Button::RegisterButton(const char *name,
                             const int x1, const int y1, const int x2, const int y2,
                             const Button::VVF hover, const Button::VVF press, const Button::VVF release, const Button::VVF leave) {
@@ -79,9 +84,7 @@ bool Button::RegisterButton(const char *name,
     }
   );
   //Initialize button
-  EventHook::CallHook(buttons_[name].hookMgr.GetHookID("Hover&Leave"));
-  EventHook::CallHook(buttons_[name].hookMgr.GetHookID("Press"));
-  EventHook::CallHook(buttons_[name].hookMgr.GetHookID("Release&Hover"));
+  buttons_[name].hookMgr.CallAllHook();
   buttons_[name].enabled = true;
   //Return success
   return true;
@@ -175,16 +178,16 @@ bool Button::IsEnabled(const char *name) {
   return buttons_[name].enabled;
 }
 
-/*====================================================
+/*========================================
  *Function name : DrawDebugLayer
  *Description : Draw debug layer
  *Return : TRUE on success, FALSE on error
- ===================================================*/
+ =======================================*/
 bool Button::DrawDebugLayer() {
   //Record default renderer color
   Uint8 r, g, b, a;
   if (!TFC::Canvas::GetDrawColor(r, g, b, a)) {
-    error_ = TFC::Canvas::CanvasData::error;
+    error_ = TFC::Canvas::Data::error;
     return false;
   }
   //Draw rectangles for every button
@@ -200,7 +203,7 @@ bool Button::DrawDebugLayer() {
   }
   //Set renderer color to default
   if (!TFC::Canvas::SetDrawColor(r, g, b, a)) {
-    error_ = TFC::Canvas::CanvasData::error;
+    error_ = TFC::Canvas::Data::error;
     return false;
   }
   //Return success
@@ -215,7 +218,7 @@ bool Button::DrawDebugLayer() {
  *Return : TRUE on detected, FALSE on not detected
  ========================================================*/
 bool Button::IsInRangeHover(Button::BTN &button) const {
-    return button.x1 <= TFC::Display::DisplayData::event.motion.x && button.x2 >= TFC::Display::DisplayData::event.motion.x && button.y1 <= TFC::Display::DisplayData::event.motion.y && button.y2 >= TFC::Display::DisplayData::event.motion.y;
+    return button.x1 <= TFC::Director::Data::event.motion.x && button.x2 >= TFC::Director::Data::event.motion.x && button.y1 <= TFC::Director::Data::event.motion.y && button.y2 >= TFC::Director::Data::event.motion.y;
 }
 
 /*==========================================================
@@ -226,7 +229,7 @@ bool Button::IsInRangeHover(Button::BTN &button) const {
  *Return : TRUE on detected, FALSE on not detected
  ========================================================*/
 bool Button::IsInRangePress(Button::BTN &button) const {
-    return button.x1 <= TFC::Display::DisplayData::event.button.x && button.x2 >= TFC::Display::DisplayData::event.button.x && button.y1 <= TFC::Display::DisplayData::event.button.y && button.y2 >= TFC::Display::DisplayData::event.button.y;
+    return button.x1 <= TFC::Director::Data::event.button.x && button.x2 >= TFC::Director::Data::event.button.x && button.y1 <= TFC::Director::Data::event.button.y && button.y2 >= TFC::Director::Data::event.button.y;
 }
 
 }

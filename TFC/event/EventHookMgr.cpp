@@ -1,5 +1,7 @@
 #include "EventHookMgr.h"
 
+#include "EventHook.h"
+
 namespace TFC {
 
 EventHookMgr::EventHookMgr() {}
@@ -59,6 +61,21 @@ bool EventHookMgr::RemoveHook(const char *name) {
   EventHook::RemoveHook(hook_[name]);
   hook_.erase(name);
   //Return success
+  return true;
+}
+
+void EventHookMgr::CallAllHook() {
+  for (auto &i : hook_) {
+    EventHook::CallHook(i.second);
+  }
+}
+
+bool EventHookMgr::CallHook(const char *name) {
+  if (!IsHookExists(name)) {
+    error_ = "Invalid name";
+    return false;
+  }
+  EventHook::CallHook(hook_[name]);
   return true;
 }
 

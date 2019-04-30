@@ -8,7 +8,6 @@
 #ifndef EVENTHOOKMGR_H
 #define EVENTHOOKMGR_H
 
-#include "EventHook.h"
 #include "../TFC_header.h"
 
 namespace TFC {
@@ -25,6 +24,9 @@ using VVF = std::function<void()>;
   //Remove
   void RemoveAllHook();
   bool RemoveHook(const char*);
+  //Call
+  void CallAllHook();
+  bool CallHook(const char*);
   //Get
   std::string GetError() const;
   uint64_t GetHookID(const char*);

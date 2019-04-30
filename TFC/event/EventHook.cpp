@@ -1,5 +1,9 @@
 #include "EventHook.h"
 
+#include "../component/Director.h"
+
+#include "EventHook.h"
+
 namespace TFC {
 namespace EventHook {
 namespace EventHookData {
@@ -55,7 +59,7 @@ void CallAllHook(const SDL_EventType type) {
  ====================================================*/
 void CallAllHook() {
   //Call hooks
-  CallAllHook(static_cast<SDL_EventType>(Display::DisplayData::event.type));
+  CallAllHook(static_cast<SDL_EventType>(Director::Data::event.type));
 }
 
 /*==============================================
@@ -91,8 +95,12 @@ bool IsHookExists(const uint64_t index) {
 
 }
 
+/*===========================================
+ *Function name : TFC_HOOK_QUIT
+ *Description : A simple preset hook function
+ ==========================================*/
 void TFC_HOOK_QUIT() {
-  TFC::Display::StopMainLoop();
+  TFC::Director::StopMainLoop();
 }
 
 } // TFC

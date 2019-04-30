@@ -1,45 +1,48 @@
-#ifndef CANVAS_H
-#define CANVAS_H
+/*************************************************
+ *Copyright (c) 2019-2019 SamuNatsu <samunatsu.cn>
+ *File name : Canvas.h
+ *Version : 1.0
+ ************************************************/
+
+#ifndef TFC_GRAPH_CANVAS_H
+#define TFC_GRAPH_CANVAS_H
 
 #include "../TFC_header.h"
-#include "MsgBox.h"
-
-#include <string>
 
 namespace TFC {
 namespace Canvas {
-namespace CanvasData {
-extern SDL_Window* window;
-extern SDL_Renderer* renderer;
+namespace Data {
+extern SDL_Window *window;
+extern SDL_Renderer *renderer;
 extern std::string error;
-} // CanvasData
- // Initialize & Quit
+}
+//Initialize & Quit
 bool Initialize();
 void Quit();
- // Create & Destroy
-bool Create(const char*, int, int, Uint32 = 0);
+//Create & Destroy
+bool Create(const char*, const int, const int, const uint32_t = 0, const int = -1);
 bool IsCreated();
 void Destroy();
- // Renderer
+//Renderer
 bool RendererClear();
 void RendererFresh();
-bool GetDrawColor(Uint8&, Uint8&, Uint8&, Uint8&);
-bool SetDrawColor(Uint8, Uint8, Uint8, Uint8 = 255);
-bool DrawLine(int, int, int, int);
-bool DrawRect(int, int, int, int);
-bool DrawPoint(int, int);
-bool DrawPolygon(int, ...);
-bool FillRect(int, int, int, int);
-bool ScreenShot(int, int, int, int, const char*);
-bool ScreenShot(const char*);
+bool GetDrawColor(uint8_t&, uint8_t&, uint8_t&, uint8_t&);
+bool SetDrawColor(const uint8_t, const uint8_t, const uint8_t, const uint8_t = 255);
+bool DrawLine(const int, const int, const int, const int);
+bool DrawRect(const int, const int, const int, const int);
+bool DrawPoint(const int, const int);
+bool FillRect(const int, const int, const int, const int);
+bool ScreenShot(const int, const int, const int, const int, const char*);
+ bool ScreenShot(const char*);
  // Window
-void ShowWindow();
 void HideWindow();
+void ShowWindow();
 void RaiseWindow();
+void RestoreWindow();
 void MaximizeWindow();
 void MinimizeWindow();
 bool SetWindowIcon(const char*);
-} // Canvas
-} // TFC
+}
+}
 
-#endif // CANVAS_H
+#endif // TFC_GRAPH_CANVAS_H

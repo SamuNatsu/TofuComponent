@@ -55,19 +55,19 @@ bool FiniteStateMachine::Reset(const char *name) {
   return true;
 }
 
-/*=================================================
+/*========================
  *Function name : Update
  *Description : Update FSM
- ================================================*/
+ =======================*/
 void FiniteStateMachine::Update() {
   //Update
   nowState_->second->Update();
 }
 
-/*=================================================
+/*===========================
  *Function name : Input
  *Description : Process input
- ================================================*/
+ ==========================*/
 void FiniteStateMachine::Input(const uint64_t input) {
   //Process input
   nowState_->second->Input(*this, input);
@@ -94,11 +94,11 @@ bool FiniteStateMachine::Transition(const char *name) {
   return true;
 }
 
-/*=================================================
+/*==============================
  *Function name : GetError
  *Description : Get error string
  *Return : Error string
- ================================================*/
+ =============================*/
 std::string FiniteStateMachine::GetError() const {
   //Return query
   return error_;

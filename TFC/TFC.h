@@ -9,6 +9,7 @@
 #define TFC_H_INCLUDED
 
 #include "./component/Button.h"
+#include "./component/Director.h"
 
 #include "./event/EventHook.h"
 #include "./event/EventHookMgr.h"
@@ -22,8 +23,9 @@
 #include "./network/TCP/TCPClient.h"
 */
 
-#include "./graph/AnimateImage.h"
-#include "./graph/Image.h"
+#include "./graph/class/AnimateImage.h"
+#include "./graph/class/Image.h"
+
 #include "./graph/Canvas.h"
 #include "./graph/MsgBox.h"
 #include "./graph/Display.h"

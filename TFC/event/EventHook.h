@@ -8,7 +8,6 @@
 #ifndef EVENTHOOK_H
 #define EVENTHOOK_H
 
-#include "../graph/Display.h"
 #include "../TFC_header.h"
 
 namespace TFC {
