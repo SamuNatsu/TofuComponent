@@ -23,8 +23,9 @@
 #include "./network/TCP/TCPClient.h"
 */
 
-#include "./graph/class/AnimateImage.h"
-#include "./graph/class/Image.h"
+#include "./class/AnimateImage.h"
+#include "./class/Font.h"
+#include "./class/Image.h"
 
 #include "./graph/Canvas.h"
 #include "./graph/MsgBox.h"
