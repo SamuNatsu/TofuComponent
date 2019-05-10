@@ -1,0 +1,13 @@
+1. Spirit suppport
+2. Text support
+3. TTF support
+4. Bitmap font support
+5. Aniamte support
+6. Physics support
+7. Sound support
+8. More components
+9. Better event engine
+10. Mult-thread loading
+11. Maybe timer?
+12. Network support
+13. UI support
