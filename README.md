@@ -1,5 +1,6 @@
 # TofuComponent
 A 2D game component pack based on SDL
+Just a C++ library
 
 Github is just a place for me to manage the source code
 
